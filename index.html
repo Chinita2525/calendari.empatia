@@ -86,15 +86,6 @@
             font-size: 20px;
             margin-top: 20px;
         }
-        .motivation {
-            text-align: center;
-            font-size: 24px;
-            color: white;
-            background-color: rgba(0, 0, 0, 0.7);
-            padding: 20px;
-            border-radius: 10px;
-            margin-top: 30px;
-        }
     </style>
 </head>
 <body>
@@ -113,12 +104,6 @@
 
     <div class="reward-container" id="rewards">
         <!-- Las recompensas se generarán aquí -->
-    </div>
-
-    <div id="motivation" class="motivation" style="display: none;">
-        <!-- Mensaje motivador al completar todos los días -->
-        <p>¡Felicidades! Has completado todos los días del Calendario de Empatía. 🌟</p>
-        <p><strong>Tu esfuerzo ha hecho del mundo un lugar mejor. ¡Sigue así!</strong></p>
     </div>
 
     <script>
@@ -164,7 +149,6 @@
         ];
 
         let points = 0;
-        let completedDays = 0; // Contador de los días completados
 
         // Función para generar el calendario
         function generateCalendar() {
@@ -191,13 +175,11 @@
             dayElement.classList.add("completed");
 
             points++;
-            completedDays++;
 
             // Crear una nueva recompensa para este día
             createReward(dayIndex);
 
             updateRewards();
-            checkCompletion();
         }
 
         // Crear y mostrar una recompensa
@@ -228,13 +210,6 @@
         function updateRewards() {
             const pointsContainer = document.getElementById("points");
             pointsContainer.innerHTML = `<span>Puntos: ${points}</span>`;
-        }
-
-        // Comprobar si se completaron todos los días
-        function checkCompletion() {
-            if (completedDays === 30) {
-                document.getElementById("motivation").style.display = "block";
-            }
         }
 
         // Inicializar el calendario
