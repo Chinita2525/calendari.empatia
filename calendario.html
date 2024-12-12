@@ -1,0 +1,246 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Calendario de Empatía</title>
+    <!-- Importar la fuente "More Sugar" desde Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=More+Sugar&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'More Sugar', sans-serif;
+            color: black;
+            margin: 0;
+            padding: 20px;
+            background: url('https://thumbs.dreamstime.com/b/fondo-animado-virtual-paisaje-oscuro-cielo-entorno-de-y-estrellas-con-una-nebulosa-coloreada-generativa-ai-299570045.jpg') no-repeat center center fixed;
+            background-size: cover;
+        }
+        h1, h2 {
+            text-align: center;
+            color: black; /* Color del texto */
+            text-shadow: 2px 2px 4px rgba(255, 255, 255, 1), -2px -2px 4px rgba(255, 255, 255, 1); /* Contorno blanco */
+        }
+        .calendar {
+            display: grid;
+            grid-template-columns: repeat(7, 1fr);
+            grid-gap: 10px;
+            margin: 20px auto;
+            max-width: 700px;
+        }
+        .day {
+            background-color: rgba(255, 255, 255, 0.8);
+            border: 1px solid #ddd;
+            padding: 10px;
+            text-align: center;
+            font-size: 16px;
+            border-radius: 5px;
+            cursor: pointer;
+            position: relative;
+        }
+        .day:hover {
+            background-color: rgba(255, 255, 255, 0.9);
+        }
+        .action {
+            font-size: 14px;
+            margin: 10px 0;
+        }
+        .button {
+            background-color: #4CAF50;
+            color: white;
+            padding: 5px 10px;
+            border: none;
+            cursor: pointer;
+            border-radius: 5px;
+            font-size: 14px;
+        }
+        .button:hover {
+            background-color: #45a049;
+        }
+        .completed {
+            background-color: #e0f7e0;
+        }
+        .reward-container {
+            display: flex;
+            justify-content: center;
+            flex-wrap: wrap;
+            margin-top: 30px;
+        }
+        .reward {
+            margin: 10px;
+            padding: 20px;
+            background-color: rgba(255, 255, 255, 0.8);
+            border-radius: 5px;
+            width: 150px;
+            text-align: center;
+            font-size: 24px;
+        }
+        .reward img {
+            max-width: 60px;
+        }
+        .reward.giant {
+            width: 200px;
+            font-size: 36px;
+        }
+        .points-container {
+            text-align: center;
+            font-size: 20px;
+            margin-top: 20px;
+        }
+        .motivation {
+            text-align: center;
+            font-size: 24px;
+            color: white;
+            background-color: rgba(0, 0, 0, 0.7);
+            padding: 20px;
+            border-radius: 10px;
+            margin-top: 30px;
+        }
+    </style>
+</head>
+<body>
+
+    <h1>Calendario de Empatía</h1>
+    <h2>Realiza una acción empática cada día y gana puntos</h2>
+
+    <div class="calendar" id="calendar">
+        <!-- Las acciones empáticas se generarán dinámicamente aquí -->
+    </div>
+
+    <div class="points-container" id="points">
+        <!-- Mostrar puntos acumulados -->
+        <span>Puntos: 0</span>
+    </div>
+
+    <div class="reward-container" id="rewards">
+        <!-- Las recompensas se generarán aquí -->
+    </div>
+
+    <div id="motivation" class="motivation" style="display: none;">
+        <!-- Mensaje motivador al completar todos los días -->
+        <p>¡Felicidades! Has completado todos los días del Calendario de Empatía. 🌟</p>
+        <p><strong>Tu esfuerzo ha hecho del mundo un lugar mejor. ¡Sigue así!</strong></p>
+    </div>
+
+    <script>
+        // Array de acciones empáticas
+        const actions = [
+            "Ayudar a alguien con un problema",
+            "Escuchar a un amigo sin interrumpir",
+            "Donar ropa que ya no uses",
+            "Enviar un mensaje de agradecimiento",
+            "Ofrecerte para ayudar a un vecino",
+            "Elogiar a alguien sinceramente",
+            "Llamar a un familiar para saber cómo está",
+            "Compartir una comida con alguien necesitado",
+            "Dar un cumplido genuino",
+            "Prestar atención a una conversación sin distracciones",
+            "Hacer un acto de bondad al azar",
+            "Ser voluntario en una organización",
+            "Sonreírle a alguien",
+            "Sostener la puerta para alguien",
+            "Escuchar activamente sin juzgar",
+            "Ayudar a alguien con sus tareas",
+            "Pasar tiempo de calidad con un ser querido",
+            "Recomendar algo útil a un amigo",
+            "Llamar a un amigo para ofrecer apoyo",
+            "Perdonar a alguien de corazón",
+            "Contar una historia inspiradora",
+            "Ceder el paso a alguien",
+            "Hacerle un favor a un desconocido",
+            "Dar tu lugar en una fila",
+            "Prestar algo que alguien necesite",
+            "Compartir tus conocimientos con alguien",
+            "Tomarte un momento para ayudar a alguien con estrés",
+            "Respetar las emociones de los demás",
+            "Ser paciente con los demás",
+            "Decir algo amable a ti mismo"
+        ];
+
+        // Array de emojis, uno para cada día del calendario
+        const emojis = [
+            "🤗", "❤️", "💪", "🌼", "🌈", "💖", "🙏", "🌻", "😊", "🎶", 
+            "🎉", "🌟", "💐", "🥰", "🙌", "💫", "💌", "🌞", "🤩", "🦄", 
+            "✨", "🌍", "💎", "🍀", "🌸", "💙", "💚", "🔥", "💛", "💖", "🎁"
+        ];
+
+        let points = 0;
+        let completedDays = 0; // Contador de los días completados
+
+        // Función para generar el calendario
+        function generateCalendar() {
+            const calendar = document.getElementById("calendar");
+            for (let i = 0; i < 30; i++) {
+                const day = document.createElement("div");
+                day.classList.add("day");
+                day.id = `day-${i + 1}`;
+
+                // Cambiar el texto en días específicos sin emojis
+                day.innerHTML = `
+                    <strong>Día ${i + 1}</strong>
+                    <div class="action">${actions[i]}</div>
+                    <button class="button" onclick="completeAction(${i})">Marcar como completado</button>
+                `;
+
+                calendar.appendChild(day);
+            }
+        }
+
+        // Función para completar la acción y asignar recompensas
+        function completeAction(dayIndex) {
+            const dayElement = document.getElementById(`day-${dayIndex + 1}`);
+            dayElement.classList.add("completed");
+
+            points++;
+            completedDays++;
+
+            // Crear una nueva recompensa para este día
+            createReward(dayIndex);
+
+            updateRewards();
+            checkCompletion();
+        }
+
+        // Crear y mostrar una recompensa
+        function createReward(dayIndex) {
+            const rewardsContainer = document.getElementById("rewards");
+            const reward = document.createElement("div");
+            reward.classList.add("reward");
+
+            // Si es el día 30, dar un sticker gigante
+            if (dayIndex === 29) {
+                reward.classList.add("giant");
+                reward.innerHTML = `
+                    <span>🎉</span>
+                    <p>Día de la Empatía</p>
+                `;
+            } else {
+                const emoji = emojis[dayIndex];  // Elegir un emoji diferente por día
+                reward.innerHTML = `
+                    <span>${emoji}</span>
+                    <p>Día ${dayIndex + 1}</p>
+                `;
+            }
+
+            rewardsContainer.appendChild(reward);
+        }
+
+        // Actualizar la sección de recompensas (Puntos)
+        function updateRewards() {
+            const pointsContainer = document.getElementById("points");
+            pointsContainer.innerHTML = `<span>Puntos: ${points}</span>`;
+        }
+
+        // Comprobar si se completaron todos los días
+        function checkCompletion() {
+            if (completedDays === 30) {
+                document.getElementById("motivation").style.display = "block";
+            }
+        }
+
+        // Inicializar el calendario
+        generateCalendar();
+
+    </script>
+
+</body>
+</html>
